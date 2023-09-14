@@ -1,8 +1,11 @@
 #ifndef INTERNSHIP_TEST_SPARSE_MATRIX_H
 #define INTERNSHIP_TEST_SPARSE_MATRIX_H
 
+#include <filesystem>
 #include <fstream>
 #include <vector>
+
+namespace fs = std::filesystem;
 
 class SparseMatrix {
    public:
@@ -12,16 +15,14 @@ class SparseMatrix {
     };
 
     explicit SparseMatrix() {}
-    SparseMatrix(std::ifstream stream);
+    SparseMatrix(fs::path fname);
 
     void Print();
 
     SparseMatrix operator*(const SparseMatrix &m);
+    SparseMatrix operator^(uint32_t p);
 
-    SparseMatrix Power(uint32_t p);
-
-   private:
-    std::vector<std::vector<Element>> data_;
+    std::vector<std::vector<Element>> data;
 };
 
 #endif  // INTERNSHIP_TEST_SPARSE_MATRIX_H
