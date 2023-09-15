@@ -55,9 +55,10 @@ SparseMatrix SparseMatrix::operator*(const SparseMatrix &m) {
     result.data = std::vector<std::vector<Element>>(data.size(),std::vector<Element>(m.data[0].size()));
     for(int32_t i = 0; i < data.size(); i++){
         for(int32_t j = 0; j < m.data[0].size(); j++){
-            if(data[i][j].value!=0){
+            if(data[i][j].value!=0){ //единственная оптимулина для спарсов до которой додумался
                 for (int32_t k = 0; k < data[0].size(); k++){
                     result.data[i][j].value += data[i][k].value*m.data[k][j].value;
+                    result.data[i][j].index = j;
                 }
             }
         }
@@ -73,13 +74,24 @@ SparseMatrix SparseMatrix::operator^(uint32_t p) {
     //перемножаем матрицы, степени которых соответствуют степеням двойки, на которую домножается разряд двоичной записи
     //для перевода в десятичную систему счисления
     //В резалте останется искомая степень матрицы
-    //пока что банальная реализация
+    //в первом коммите "наиная степень"
+    //теперь эта реализация
+    //если она не заработала, то может быть заработает предыдущий коммит =(
+    result = Eye(data.size());
     if(p == 0){
-        return Eye(data.size());
+        return result;
     }else{
-        result = *this;
-        for(int32_t i = 0; i < p-1; i++){
-            result = result*result;
+        std::string s, binp;
+        SparseMatrix Q = *this;
+        while (p > 0){
+            s.push_back(char(p%2 - '0'));
+            p /= 2;
+        }
+        for(int32_t i = 0; i < s.size(); i++){
+            if (s[i] == 1){
+                result = result*Q;
+            }
+            Q = Q*Q;
         }
     }
     return result;
