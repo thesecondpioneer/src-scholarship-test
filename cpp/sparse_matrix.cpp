@@ -1,4 +1,4 @@
-#include "sparse_matrix.h"
+I#include "sparse_matrix.h"
 
 SparseMatrix::SparseMatrix(fs::path fname) {
     std::ifstream stream(fname);
@@ -57,7 +57,7 @@ SparseMatrix SparseMatrix::operator*(const SparseMatrix &m) {
         for(int32_t j = 0; j < m.data[0].size(); j++){
             if(data[i][j].value!=0){ //единственная оптимулина для спарсов до которой додумался
                 for (int32_t k = 0; k < data[0].size(); k++){
-                    result.data[i][j].value += data[i][k].value*m.data[k][j].value;
+                    result.data[i][k].value += data[i][j].value*m.data[k][j].value; //тут, конечно же, ошибся с индексами, в голове было умножение с учётом роликов, а написал умножение стандартное
                     result.data[i][j].index = j;
                 }
             }
